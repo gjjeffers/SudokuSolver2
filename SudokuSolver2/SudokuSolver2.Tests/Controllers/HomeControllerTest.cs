@@ -12,7 +12,7 @@ namespace SudokuSolver2.Tests.Controllers
     [TestClass]
     public class HomeControllerTest
     {
-        [TestMethod]
+        [TestMethod, TestCategory("Initalizers")]
         public void Index()
         {
             // Arrange

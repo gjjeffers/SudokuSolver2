@@ -153,6 +153,7 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Node.cs" />
+    <Compile Include="Models\NodeGroup.cs" />
     <Compile Include="Models\Puzzle.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -163,6 +164,12 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Puzzles\puzzle1.txt" />
+    <Content Include="Puzzles\puzzle2.txt" />
+    <Content Include="Puzzles\puzzle3.txt" />
+    <Content Include="Puzzles\puzzle4.txt" />
+    <Content Include="Puzzles\puzzle5.txt" />
+    <Content Include="Puzzles\super.txt" />
     <Content Include="Scripts\ai.0.15.0-build58334.js" />
     <Content Include="Scripts\ai.0.15.0-build58334.min.js" />
     <Content Include="Scripts\bootstrap.js" />

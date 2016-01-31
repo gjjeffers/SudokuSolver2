@@ -84,6 +84,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\NodeGroupTests.cs" />
+    <Compile Include="Models\NodeTests.cs" />
     <Compile Include="Models\PuzzleTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
