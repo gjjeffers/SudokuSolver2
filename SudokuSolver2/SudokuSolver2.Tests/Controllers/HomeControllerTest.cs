@@ -29,9 +29,8 @@ namespace SudokuSolver2.Tests.Controllers
         public void Solve()
         {
             var controller = new HomeController();
-
-            PartialViewResult result = controller.Solve("");
-
+            string VALID_STARTING_PUZZLE = "6x7x81xxxx5x9xxx32xxxx5xxxx2x6xxxxx3x74xxx95x8xxxxx7x4xxxx1xxxx94xxx2x7xxxx74x2x8";
+            PartialViewResult result = controller.Solve(VALID_STARTING_PUZZLE);
             Assert.IsNotNull(result);
         }
     }

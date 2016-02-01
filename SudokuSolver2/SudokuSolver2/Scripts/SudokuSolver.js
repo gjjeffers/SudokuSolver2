@@ -4,7 +4,7 @@ $(document).ready(function () {
     var selected_file = document.getElementById('selectFile').files[0];
     var e = new FileReader();
     e.onload = function () {
-        var url = "/index/solve?start=" + e.result;
+        var url = "/home/solve?startingPuzzle=" + e.result;
         $.post(url, function (data) {
             $("#puzzleGrid").empty();
             $("#puzzleGrid").hide().html(data).fadeIn('slow');

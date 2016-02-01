@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using SudokuSolver2.Models;
+using System.Threading.Tasks;
+using System.Threading;
 
 namespace SudokuSolver2.Controllers
 {
@@ -11,13 +13,14 @@ namespace SudokuSolver2.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            Puzzle emptyPuzzle = new Puzzle();
+            return View(emptyPuzzle);
         }
 
         public PartialViewResult Solve(string startingPuzzle)
         {
             Puzzle puzzle = new Puzzle(startingPuzzle);
-            puzzle.Start();
+            puzzle.Solve();
             return PartialView(puzzle);
         }
     }

@@ -2,6 +2,7 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SudokuSolver2.Models;
 using System.Text;
+using System.Threading;
 
 namespace SudokuSolver2.Tests.Models
 {
@@ -9,6 +10,7 @@ namespace SudokuSolver2.Tests.Models
     public class PuzzleTest
     {
         const string VALID_STARTING_PUZZLE = "6x7x81xxxx5x9xxx32xxxx5xxxx2x6xxxxx3x74xxx95x8xxxxx7x4xxxx1xxxx94xxx2x7xxxx74x2x8";
+        const string PRE_GUESS_PUZZLE = "607081000050900032009050007206000003074020956805000724702010000940002071500740208";
         const string VALID_FINISHED_PUZZLE = "627381495451967832389254617296475183174823956835196724762518349948632571513749268";
         const string INVALID_FINISHED_PUZZLE = "627361495451967832389254617296475183174823956835196724762518349948632571513749268";
         const string INVALID_ROW_STARTING_PUZZLE = "6x7x61xxxx5x9xxx32xxxx5xxxx2x6xxxxx3x74xxx95x8xxxxx7x4xxxx1xxxx94xxx2x7xxxx74x2x8"; //Duplicate 6's in Row 1, no other invalid points
@@ -22,9 +24,7 @@ namespace SudokuSolver2.Tests.Models
         {
             var noTest = new Puzzle();
             Assert.IsNotNull(noTest.Grid);
-            Assert.IsNotNull(noTest.Row);
-            Assert.IsNotNull(noTest.Column);
-            Assert.IsNotNull(noTest.Block);
+            Assert.IsNotNull(noTest.Sections);
         }
 
         [TestMethod, TestCategory("Initalizers")]        
@@ -32,9 +32,7 @@ namespace SudokuSolver2.Tests.Models
         {
             var emptyTest = new Puzzle("");
             Assert.IsNull(emptyTest.Grid);
-            Assert.IsNull(emptyTest.Row);
-            Assert.IsNull(emptyTest.Column);
-            Assert.IsNull(emptyTest.Block);
+            Assert.IsNull(emptyTest.Sections);
             Assert.AreEqual("Invalid Starting Puzzle String", emptyTest.Status);
         }
 
@@ -43,9 +41,7 @@ namespace SudokuSolver2.Tests.Models
         {
             var shortTest = new Puzzle("123456789");
             Assert.IsNull(shortTest.Grid);
-            Assert.IsNull(shortTest.Row);
-            Assert.IsNull(shortTest.Column);
-            Assert.IsNull(shortTest.Block);
+            Assert.IsNull(shortTest.Sections);
             Assert.AreEqual("Invalid Starting Puzzle String", shortTest.Status);
         }
 
@@ -60,9 +56,7 @@ namespace SudokuSolver2.Tests.Models
             var longTest = new Puzzle(longPuzzle.ToString());
             Assert.IsNull(longTest.Grid);
             Assert.IsNull(longTest.Grid);
-            Assert.IsNull(longTest.Row);
-            Assert.IsNull(longTest.Column);
-            Assert.IsNull(longTest.Block);
+            Assert.IsNull(longTest.Sections);
             Assert.AreEqual("Invalid Starting Puzzle String", longTest.Status);
         }
 
@@ -71,9 +65,7 @@ namespace SudokuSolver2.Tests.Models
         {
             var correctTest = new Puzzle(VALID_STARTING_PUZZLE);
             Assert.IsNotNull(correctTest, "Puzzle not created");
-            Assert.AreEqual(9, correctTest.Row.Count, "Row NodeGroup failed");
-            Assert.AreEqual(9, correctTest.Column.Count, "Column NodeGroup failed");
-            Assert.AreEqual(9, correctTest.Block.Count, "Block NodeGroup failed");
+            Assert.AreEqual(27, correctTest.Sections.Count, "Section NodeGroups failed");
             Assert.AreEqual("", correctTest.Status);
         }
         #endregion
@@ -83,8 +75,7 @@ namespace SudokuSolver2.Tests.Models
         public void SetupPuzzleTest()
         {
             Puzzle setupTest = new Puzzle();
-            setupTest.SetupPuzzle();
-            Assert.AreEqual(81, setupTest.Grid.Count, "Not enough nodes in grid");
+            Assert.AreEqual(81, setupTest.Grid.Count, "Incorrect number of nodes in grid");
         }
 
         [TestMethod, TestCategory("Methods")]
@@ -123,13 +114,11 @@ namespace SudokuSolver2.Tests.Models
         public void InitializeValuesTest()
         {
             Puzzle initValueTest = new Puzzle();
-            initValueTest.SetupPuzzle();
             initValueTest.InitializeValues(VALID_STARTING_PUZZLE);
             Assert.AreEqual(6, initValueTest.Grid[0].Value, "[1,1] not set correctly");
             Assert.AreEqual(9, initValueTest.Grid[12].Value, "[4,2] not set correctly");
             Assert.AreEqual(2, initValueTest.Grid[17].Value, "[9,2] not set correctly");
             Assert.AreEqual(8, initValueTest.Grid[45].Value, "[1,6] not set correctly");
-            Assert.AreEqual(0, initValueTest.Grid[40].Value, "[5,5] not set correctly");
             Assert.AreEqual(7, initValueTest.Grid[51].Value, "[7,6] not set correctly");
             Assert.AreEqual(9, initValueTest.Grid[63].Value, "[1,8] not set correctly");
             Assert.AreEqual(1, initValueTest.Grid[58].Value, "[5,7] not set correctly");
@@ -140,32 +129,32 @@ namespace SudokuSolver2.Tests.Models
         public void ValidatePuzzleTest()
         {
             Puzzle validStartingPuzzle = new Puzzle(VALID_STARTING_PUZZLE);
-            validStartingPuzzle.ValidatePuzzle();
-            Assert.IsTrue(validStartingPuzzle.Valid);
+            Assert.IsTrue(validStartingPuzzle.IsValid(), "Starting puzzle failed");
 
-            Puzzle validFinishedPuzzle = new Puzzle(VALID_STARTING_PUZZLE);
-            validFinishedPuzzle.ValidatePuzzle();
-            Assert.IsTrue(validFinishedPuzzle.Valid);
+            Puzzle validFinishedPuzzle = new Puzzle(VALID_FINISHED_PUZZLE);
+            Assert.IsTrue(validFinishedPuzzle.IsValid(), "Finished puzzle failed");
 
             Puzzle invalidColumnPuzzle = new Puzzle(INVALID_COLUMN_STARTING_PUZZLE);
-            invalidColumnPuzzle.ValidatePuzzle();
-            Assert.IsFalse(invalidColumnPuzzle.Valid);
+            Assert.IsFalse(invalidColumnPuzzle.IsValid(), "Invalid column puzzle failed");
 
             Puzzle invalidRowPuzzle = new Puzzle(INVALID_ROW_STARTING_PUZZLE);
-            invalidRowPuzzle.ValidatePuzzle();
-            Assert.IsFalse(invalidRowPuzzle.Valid);
+            Assert.IsFalse(invalidRowPuzzle.IsValid(), "Invalid row puzzle failed");
 
             Puzzle invalidBlockPuzzle = new Puzzle(INVALID_BLOCK_STARTING_PUZZLE);
-            invalidBlockPuzzle.ValidatePuzzle();
-            Assert.IsFalse(invalidBlockPuzzle.Valid);
+            Assert.IsFalse(invalidBlockPuzzle.IsValid(), "Invalid block puzzle failed");
 
             Puzzle invalidFinishedPuzzle = new Puzzle(INVALID_FINISHED_PUZZLE);
-            invalidFinishedPuzzle.ValidatePuzzle();
-            Assert.IsFalse(invalidFinishedPuzzle.Valid);
-
-
+            Assert.IsFalse(invalidFinishedPuzzle.IsValid(), "Invalid finished puzzle failed");
         }
         #endregion
+
+        [TestMethod, TestCategory("Process")]
+        public void ProcessTest()
+        {
+            Puzzle p = new Puzzle(VALID_STARTING_PUZZLE);
+            p.Solve();
+            Assert.AreEqual(VALID_FINISHED_PUZZLE, p.ToString());
+        }
 
 
 

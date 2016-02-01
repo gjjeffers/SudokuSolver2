@@ -4,7 +4,7 @@ using System.ComponentModel;
 
 namespace SudokuSolver2.Models
 {
-    public class Node: INotifyPropertyChanged
+    public class Node: INotifyPropertyChanged, ICloneable
     {
         public List<int> Possibilities = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9};
         public int Value = 0;
@@ -28,6 +28,17 @@ namespace SudokuSolver2.Models
             {
                 PropertyChanged(this, new PropertyChangedEventArgs(info));
             }
+        }
+
+        public object Clone()
+        {
+            var newNode = new Node() { Value = this.Value, Row = this.Row, Column = this.Column, Block = this.Block };
+            newNode.Possibilities = new List<int>();
+            foreach(int i in Possibilities)
+            {
+                newNode.Possibilities.Add(i);
+            }
+            return newNode;
         }
     }
 }
