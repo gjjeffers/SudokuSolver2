@@ -156,6 +156,26 @@ namespace SudokuSolver2.Tests.Models
             Assert.AreEqual(VALID_FINISHED_PUZZLE, p.ToString());
         }
 
+        [TestMethod, TestCategory("Interface")]
+        public void CloneTest()
+        {
+            Puzzle puzzleTest = new Puzzle(VALID_STARTING_PUZZLE);
+            Puzzle puzzleTestClone1 = (Puzzle)puzzleTest.Clone();
+            Assert.AreEqual(puzzleTest.ToString(), puzzleTestClone1.ToString());
+            CollectionAssert.AreEqual(puzzleTest.Grid[2].Possibilities, puzzleTestClone1.Grid[2].Possibilities);
+
+            puzzleTest.Grid[2].Possibilities.Remove(2);
+            Puzzle puzzleTestClone2 = (Puzzle)puzzleTest.Clone();
+            Assert.AreEqual(puzzleTest.ToString(), puzzleTestClone2.ToString());
+            CollectionAssert.AreEqual(puzzleTest.Grid[2].Possibilities, puzzleTestClone2.Grid[2].Possibilities);
+
+            puzzleTest = new Puzzle(VALID_STARTING_PUZZLE);
+            Puzzle puzzleTestClone3 = (Puzzle)puzzleTest.Clone();
+            puzzleTest.Solve();
+            puzzleTestClone1.Solve();
+            Assert.AreEqual(puzzleTest.ToString(), puzzleTestClone1.ToString());
+        }
+
 
 
     }

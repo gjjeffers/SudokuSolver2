@@ -1,11 +1,6 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SudokuSolver2.Models;
-using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace SudokuSolver2.Models.Tests
 {
@@ -42,7 +37,7 @@ namespace SudokuSolver2.Models.Tests
         #endregion
 
         #region MethodTests
-        [TestMethod,TestCategory("Methods")]
+        [TestMethod,TestCategory("Methods"),TestCategory("Interfaces")]
         public void SetValueTest()
         {
             Node valueTest = new Node();
@@ -56,6 +51,25 @@ namespace SudokuSolver2.Models.Tests
             Assert.AreEqual(1, valueTest.Value, "Value not set");
             Assert.AreEqual("Value", events[0], "No event was raised");
 
+
+        }
+        #endregion
+
+        #region InterfaceTests
+        [TestMethod, TestCategory("Interfaces")]
+        public void CloneTest()
+        {
+            Node possTest = new Node();
+            possTest.Possibilities.Remove(3);
+            Node possTestClone = (Node)possTest.Clone();
+            Assert.IsFalse(possTestClone.Possibilities.Contains(3));
+            Assert.AreEqual(0, possTestClone.Value);
+
+            Node valTest = new Node();
+            valTest.SetValue(7);
+            Node valTestClone = (Node)valTest.Clone();
+            Assert.AreEqual(0, valTest.Possibilities.Count);
+            Assert.AreEqual(7, valTest.Value);
 
         }
         #endregion

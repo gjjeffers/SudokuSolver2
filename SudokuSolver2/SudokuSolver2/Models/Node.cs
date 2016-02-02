@@ -6,6 +6,7 @@ namespace SudokuSolver2.Models
 {
     public class Node: INotifyPropertyChanged, ICloneable
     {
+        // basic building block of puzzle. contains list of possibilities, its position in the puzzle, and value
         public List<int> Possibilities = new List<int>() { 1, 2, 3, 4, 5, 6, 7, 8, 9};
         public int Value = 0;
         public int Row = 0;
@@ -19,6 +20,7 @@ namespace SudokuSolver2.Models
             // set the value and remove all possibilities so they are not longer checked
             Value = v;
             Possibilities = new List<int>();
+            //notify listeners (NodeGroup) that the value of its member node has been set
             NotifyPropertyChanged("Value");
         }
 
